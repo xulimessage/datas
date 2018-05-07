@@ -2,9 +2,7 @@ package com.leo.datas.Utils;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leo.datas.service.DictionaryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.leo.datas.bean.ZuRquestPara;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -12,68 +10,65 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestApi {
 
+public class TestApi {
 
 
     public static void main(String[] args) {
 
-       // System.out.println(doPostGetCount("欧阳", "1", "20"));
+   /*     // System.out.println(doPostGetCount("欧阳", "1", "20"));
 
         TestApi testApi = new TestApi();
-        System.out.println(testApi.url);
+        System.out.println(testApi.url);*/
     }
 
-    @Value("${url_get}")
-    private String url;
 
-    //公安人口
-    @Value("${appkey}")
-    private static  String appkey = "6193ce028f3a498a";//管理员分配的appkey，用于对数据进行加解密
-
-    private  static String apiUrl = "http://59.215.11.151/api/public/api/GYSGAJRKK/Rksj.json";
-    //公安人口
-    private  String appid = "884d207159ef455eb4031fb252f3a7aa";
-    private  String sendId = "1000000005";//请求方标识，10位
-    private  String sendOrder = "20170101111111";//请求方订单号（原样返回），20位以内
-
-
-    public  static String doPostGetCount(String name, String pageNum, String pageSize) {
+    public String doPostGetCount(ZuRquestPara zuRquestPara) {
 
         String bodyStr = null;
         try {
-            TestApi testApi = new TestApi();
             // 组装请求参数
             Map paramMap = new HashMap();
+            if (zuRquestPara.getXm() != null||zuRquestPara.getXm()!="") {
+                paramMap.put("XM", zuRquestPara.getXm());
+            }
+            if (zuRquestPara.getGmsfhm() != null||zuRquestPara.getGmsfhm()!="") {
+                paramMap.put("num", zuRquestPara.getGmsfhm());
+            }
 
-            paramMap.put("XM", name);
-            paramMap.put("pageNum", pageNum);
-            paramMap.put("pageSize", pageSize);
+            if (zuRquestPara.getPageN() != null||zuRquestPara.getPageN()!="") {
+                paramMap.put("pageNum", zuRquestPara.getPageN());
+            }
+
+            if (zuRquestPara.getPageSize() != null||zuRquestPara.getPageSize()!="") {
+                paramMap.put("pageSize", zuRquestPara.getPageSize());
+            }
+
 
             // 组装请求消息体
             Map bodyMap = new HashMap();
             bodyMap.put("body", paramMap);
             ObjectMapper mapper = new ObjectMapper();
             String jsonBody = mapper.writeValueAsString(bodyMap);
-            System.out.println("加密前的body消息体：" + jsonBody);
+          //  System.out.println("加密前的body消息体：" + jsonBody);
             // AES加密
             AesUtil aesUtil = new AesUtil();
             // 传入appkey和body消息
-            String encryptBody = aesUtil.encrypt(appkey, jsonBody);
-            System.out.println("加密后的body消息体：" + encryptBody);
+            String encryptBody = aesUtil.encrypt(zuRquestPara.getAppkey(), jsonBody);
+           // System.out.println("加密后的body消息体：" + encryptBody);
             // 组装请求数据
-            String jsonStr = testApi.packRequestData(encryptBody);
-            System.out.println("提交的参数：" + jsonStr);
+            String jsonStr = packRequestData(encryptBody, zuRquestPara.getSpendId(), zuRquestPara.getSendOrder(), zuRquestPara.getAppid());
+           // System.out.println("提交的参数：" + jsonStr);
             // 请求接口
-            String result = testApi.post(jsonStr, apiUrl);
-            System.out.println("返回的加密消息" + result);
+            String result = post(jsonStr, zuRquestPara.getUrl());
+          //  System.out.println("返回的加密消息" + result);
             Map resultRep = mapper.readValue(result, Map.class);
             Map appResMap = (Map) resultRep.get("appRes");
-            System.out.println("解密前的body消息体:" + (String) appResMap.get("body"));
-            System.out.println("appkey：" + appkey);
+          //  System.out.println("解密前的body消息体:" + (String) appResMap.get("body"));
+         //   System.out.println("appkey：" + zuRquestPara.getAppkey());
 
-            bodyStr = aesUtil.desCrypt(appkey, (String) appResMap.get("body"));
-            System.out.println("解密后的body消息体:" + bodyStr);
+            bodyStr = aesUtil.desCrypt(zuRquestPara.getAppkey(), (String) appResMap.get("body"));
+          //  System.out.println("解密后的body消息体:" + bodyStr);
 
 
         } catch (Exception e) {
@@ -89,7 +84,7 @@ public class TestApi {
      *
      * @return
      */
-    private String packRequestData(String body) {
+    private String packRequestData(String body, String sendId, String sendOrder, String appid) {
         String jsonStr = "";
         try {
             ObjectMapper mapper = new ObjectMapper();

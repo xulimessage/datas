@@ -1,13 +1,12 @@
 package com.leo.datas.service;
 
-import com.leo.datas.domain.Dictonary;
 import com.leo.datas.domain.Person;
 
 import java.util.List;
-import java.util.Optional;
-
 public interface PersonService {
     Person save(Person person);
+
+    void saveList(List<Person> personList);
 
     Person findById(int id);
 
@@ -15,7 +14,7 @@ public interface PersonService {
 
     void delete(int id);
 
-    List<Person> findAll();
+    List<Person> findAll(int page,int size);
 
 
 

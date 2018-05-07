@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class CharacterStatusServiceImpl implements CharacterStatusService {
     @Autowired
@@ -21,4 +22,16 @@ public class CharacterStatusServiceImpl implements CharacterStatusService {
         charactorStatusDao.saveAll(charactorStatus);
 
     }
+
+    @Override
+    public CharactorStatus update(CharactorStatus charactorStatus) {
+        CharactorStatus charactorStatus1 = charactorStatusDao.saveAndFlush(charactorStatus);
+        return charactorStatus;
+    }
+
+    @Override
+    public List<CharactorStatus> findAll() {
+        return charactorStatusDao.findAll();
+    }
+
 }

@@ -1,0 +1,19 @@
+package com.leo.datas.controller;
+
+import com.leo.datas.mapper.AjjXzcfjdMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class TestMybatis {
+    @Autowired
+    private AjjXzcfjdMapper ajjXzcfjdMapper;
+    @Autowired
+    private AjjXzcfjd ajjXzcfjd;
+    @GetMapping("/testmybatis")
+    private String testMybatis() {
+
+
+    }
+}

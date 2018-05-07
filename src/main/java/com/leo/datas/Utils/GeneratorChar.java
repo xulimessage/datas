@@ -24,7 +24,7 @@ public class GeneratorChar {
                     str = new String(bArr, "GB2312"); // 区位码组合成汉字
                     CharactorStatus charactorStatus = new CharactorStatus();
                     charactorStatus.setContent(str);
-                    charactorStatus.setDone(false);
+                    charactorStatus.setChanghurenkouIsDone(false);
                     charactorStatuses.add(charactorStatus);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();

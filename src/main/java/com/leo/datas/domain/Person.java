@@ -1,17 +1,14 @@
 package com.leo.datas.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "gaj_people")
-public class Person implements Serializable {
+public class Person implements Serializable  {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String YHZGX_ZW;
 	private String YHZGX;
