@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
+/*test*/
 @Entity
 @DynamicUpdate
 @Table(name = "charactorstatus")
